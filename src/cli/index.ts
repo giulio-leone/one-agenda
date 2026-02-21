@@ -58,9 +58,9 @@ program
       )
       .map((event) => {
         const attendeesRaw: ICalAttendee[] = Array.isArray(event.attendee)
-          ? (event.attendee as unknown as ICalAttendee[])
+          ? (event.attendee as ICalAttendee[])
           : event.attendee
-            ? ([event.attendee] as unknown as ICalAttendee[])
+            ? ([event.attendee] as ICalAttendee[])
             : [];
 
         const attendees = attendeesRaw.map((attendee) =>
