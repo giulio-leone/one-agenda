@@ -2,15 +2,12 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig({
   entry: ['src/index.ts', 'src/cli/index.ts'],
-  format: ['esm'],
+  format: ['esm', 'cjs'],
   dts: true,
   external: [
-    // Tutti i package workspace
-    /^@onecoach\//,
-    // Prisma
+    /^@giulio-leone\//,
     '@prisma/client',
     /^@prisma\/client/,
-    // Node built-ins
     /^node:/,
   ],
   noExternal: [],

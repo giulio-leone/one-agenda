@@ -1,24 +1,27 @@
 {
-  "name": "@onecoach/one-agenda",
+  "name": "@giulio-leone/one-agenda",
   "version": "0.1.0",
-  "description": "Motore di pianificazione proattiva OneAgenda per onecoach",
+  "description": "OneAgenda - Proactive planning engine",
+  "sideEffects": false,
   "type": "module",
-  "main": "src/index.ts",
-  "module": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "echo 'Skipping one-agenda build for web deployment'",
-    "build:full": "tsup",
+    "build": "tsup",
     "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm run build",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
     "test": "vitest run",
@@ -44,5 +47,13 @@
   "bin": {
     "oneagenda": "bin/oneagenda.mjs"
   },
-  "sideEffects": false
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/g97iulio1609/one-agenda.git"
+  },
+  "license": "UNLICENSED"
 }
