@@ -7,6 +7,9 @@ export * from './connectors/mock';
 export * from './demo/demo-data';
 export * from './agentic/agentic-planner';
 
+// Planning (merged from @giulio-leone/lib-planning)
+export * from './planning';
+
 // Services
 export { OneAgendaMeshOrchestrator } from './services/agents/orchestrator';
 export { OneAgendaService } from './services/oneagenda.service';
