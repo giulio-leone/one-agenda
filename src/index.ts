@@ -6,3 +6,9 @@ export * from './connectors/interfaces';
 export * from './connectors/mock';
 export * from './demo/demo-data';
 export * from './agentic/agentic-planner';
+
+// Services
+export { OneAgendaMeshOrchestrator } from './services/agents/orchestrator';
+export { OneAgendaService } from './services/oneagenda.service';
+export type { EventSender, OneAgendaMeshInput, OneAgendaPlan } from './services/agents/types';
+export * from './types/mesh-stream';

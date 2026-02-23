@@ -36,7 +36,7 @@ export const ProviderFeatureFlagSchema = z.object({
   providerId: z.string(),
   type: z.enum(['calendar', 'mail', 'task']),
   isEnabled: z.boolean().default(false),
-  metadata: z.record(z.string(), z.any()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type ProviderFeatureFlag = z.infer<typeof ProviderFeatureFlagSchema>;
