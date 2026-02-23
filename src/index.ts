@@ -15,3 +15,12 @@ export { OneAgendaMeshOrchestrator } from './services/agents/orchestrator';
 export { OneAgendaService } from './services/oneagenda.service';
 export type { EventSender, OneAgendaMeshInput, OneAgendaPlan } from './services/agents/types';
 export * from './types/mesh-stream';
+
+// Core domain (merged from @giulio-leone/oneagenda-core)
+export * from './core-domain';
+export * from './core-services';
+export * from './core-db';
+
+// UI components (merged from @giulio-leone/oneagenda-ui)
+export * from './ui-components';
+export * from './ui-hooks';

@@ -1,0 +1,28 @@
+{
+  "id": "reflection-analyzer",
+  "version": "2.0.0",
+  "type": "agent",
+  "description": "Productivity analysis and insights generation worker",
+  "interface": {
+    "input": { "$ref": "reflection-analyzer:input" },
+    "output": { "$ref": "reflection-analyzer:output" }
+  },
+  "config": {
+    "tier": "balanced",
+    "temperature": 1,
+    "maxSteps": 15,
+    "maxTokens": 8192,
+    "timeout": 120000,
+    "executionMode": "durable",
+    "durability": {
+      "enabled": true,
+      "maxDurationMs": 600000,
+      "retry": {
+        "maxAttempts": 3,
+        "backoffMs": 1000,
+        "backoffMultiplier": 2
+      },
+      "checkpointStrategy": "step"
+    }
+  }
+}

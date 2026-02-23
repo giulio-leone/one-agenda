@@ -1,0 +1,31 @@
+{
+  "id": "agenda-planner",
+  "version": "2.0.0",
+  "type": "agent",
+  "description": "Intelligent agenda orchestrator using SDK v4.0 with durable workflow",
+  "interface": {
+    "input": { "$ref": "agenda-planner:input" },
+    "output": { "$ref": "agenda-planner:output" }
+  },
+  "mcpServers": {},
+  "config": {
+    "tier": "balanced",
+    "temperature": 1,
+    "maxSteps": 30,
+    "maxTokens": 8192,
+    "timeout": 300000,
+    "executionMode": "durable",
+    "skipSynthesis": true,
+    "outputArtifact": "agendaPlan",
+    "durability": {
+      "enabled": true,
+      "maxDurationMs": 1800000,
+      "retry": {
+        "maxAttempts": 5,
+        "backoffMs": 2000,
+        "backoffMultiplier": 2
+      },
+      "checkpointStrategy": "step"
+    }
+  }
+}

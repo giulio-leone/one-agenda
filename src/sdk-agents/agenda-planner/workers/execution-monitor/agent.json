@@ -1,0 +1,28 @@
+{
+  "id": "execution-monitor",
+  "version": "2.0.0",
+  "type": "agent",
+  "description": "Task execution tracking and blocker detection worker",
+  "interface": {
+    "input": { "$ref": "execution-monitor:input" },
+    "output": { "$ref": "execution-monitor:output" }
+  },
+  "config": {
+    "tier": "fast",
+    "temperature": 1,
+    "maxSteps": 10,
+    "maxTokens": 4096,
+    "timeout": 60000,
+    "executionMode": "durable",
+    "durability": {
+      "enabled": true,
+      "maxDurationMs": 300000,
+      "retry": {
+        "maxAttempts": 2,
+        "backoffMs": 500,
+        "backoffMultiplier": 2
+      },
+      "checkpointStrategy": "step"
+    }
+  }
+}

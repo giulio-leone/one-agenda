@@ -1,0 +1,28 @@
+{
+  "id": "memory-manager",
+  "version": "2.0.0",
+  "type": "agent",
+  "description": "User preferences and pattern learning worker",
+  "interface": {
+    "input": { "$ref": "memory-manager:input" },
+    "output": { "$ref": "memory-manager:output" }
+  },
+  "config": {
+    "tier": "fast",
+    "temperature": 1,
+    "maxSteps": 10,
+    "maxTokens": 4096,
+    "timeout": 60000,
+    "executionMode": "durable",
+    "durability": {
+      "enabled": true,
+      "maxDurationMs": 300000,
+      "retry": {
+        "maxAttempts": 2,
+        "backoffMs": 500,
+        "backoffMultiplier": 2
+      },
+      "checkpointStrategy": "step"
+    }
+  }
+}
