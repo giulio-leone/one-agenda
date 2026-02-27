@@ -1,6 +1,6 @@
 {
   "name": "@giulio-leone/one-agenda",
-  "version": "0.1.0",
+  "version": "0.15.0",
   "description": "Motore di pianificazione proattiva OneAgenda per onecoach",
   "type": "module",
   "main": "src/index.ts",
