@@ -46,5 +46,9 @@
   "bin": {
     "oneagenda": "bin/oneagenda.mjs"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  }
 }
