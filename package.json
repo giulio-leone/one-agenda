@@ -26,6 +26,8 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@giulio-leone/lib-core": "workspace:*",
+    "@giulio-leone/lib-shared": "workspace:*",
     "ai": "6.0.77",
     "commander": "^14.0.2",
     "date-fns": "^4.1.0",
