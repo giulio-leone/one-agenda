@@ -115,8 +115,7 @@ export function validateGoalPlan(plan: {
   completeness += 40; // Has goals
 
   // Check milestones
-  const goalsWithMilestones = plan.goals.filter(
-    (g) => g.milestones && g.milestones.length > 0
+  const goalsWithMilestones = plan.goals.filter((g: any) => g.milestones && g.milestones.length > 0
   ).length;
   if (goalsWithMilestones === plan.goals.length) {
     completeness += 30;
@@ -128,8 +127,7 @@ export function validateGoalPlan(plan: {
   }
 
   // Check success metrics
-  const goalsWithMetrics = plan.goals.filter(
-    (g) => g.successMetrics && g.successMetrics.length > 0
+  const goalsWithMetrics = plan.goals.filter((g: any) => g.successMetrics && g.successMetrics.length > 0
   ).length;
   if (goalsWithMetrics === plan.goals.length) {
     completeness += 30;
@@ -159,7 +157,7 @@ export function validateSchedule(schedule: {
   }
 
   // Check for overloaded days
-  const overloadedDays = schedule.days.filter((d) => (d.utilizationPercent || 0) > 100).length;
+  const overloadedDays = schedule.days.filter((d: any) => (d.utilizationPercent || 0) > 100).length;
   if (overloadedDays > 0) {
     issues.push(`${overloadedDays} giorni sono sovraccarichi (>100% utilizzo)`);
   }
@@ -315,7 +313,7 @@ export function normalizeGoalPlanIds(goalPlan: GoalPlan): {
       ...goalPlan,
       goals: normalizedGoals,
       priorityRanking:
-        goalPlan.priorityRanking?.map((oldId) => goalIdMap.get(oldId) || oldId) || [],
+        goalPlan.priorityRanking?.map((oldId: any) => goalIdMap.get(oldId) || oldId) || [],
     },
     goalIdMap,
     milestoneIdMap,
@@ -342,7 +340,7 @@ export function normalizeTaskBreakdownIds(
   });
 
   // Second pass: resolve references using milestoneIndex
-  const normalizedTasks: PlannedTask[] = tasksWithNewIds.map((task) => {
+  const normalizedTasks: PlannedTask[] = tasksWithNewIds.map((task: any) => {
     // Resolve goal ID
     let resolvedGoalId = goalIdMap.get(task.goalId);
     if (!resolvedGoalId && goalIdMap.size === 1) {
@@ -355,7 +353,7 @@ export function normalizeTaskBreakdownIds(
     }
 
     // Find the goal in the normalized plan
-    const goal = goalPlan.goals.find((g) => g.id === resolvedGoalId);
+    const goal = goalPlan.goals.find((g: any) => g.id === resolvedGoalId);
 
     // Resolve milestoneId from milestoneIndex
     const milestoneIndex = (task as unknown as { milestoneIndex?: number }).milestoneIndex || 1;
@@ -363,7 +361,7 @@ export function normalizeTaskBreakdownIds(
     const resolvedMilestoneId = milestone?.id || goal?.milestones?.[0]?.id || 'milestone_default';
 
     // Resolve dependencies
-    const resolvedDependencies = (task.dependencies || []).map((dep) => taskIdMap.get(dep) || dep);
+    const resolvedDependencies = (task.dependencies || []).map((dep: any) => taskIdMap.get(dep) || dep);
 
     // Remove temporary field
     const { originalId: _originalId, ...cleanTask } = task as typeof task & { originalId?: string };
@@ -381,12 +379,11 @@ export function normalizeTaskBreakdownIds(
   const normalizedDependencyGraph: Record<string, string[]> = {};
   for (const [oldId, deps] of Object.entries(breakdown.dependencyGraph || {})) {
     const newId = taskIdMap.get(oldId) || oldId;
-    normalizedDependencyGraph[newId] = deps.map((d) => taskIdMap.get(d) || d);
+    normalizedDependencyGraph[newId] = deps.map((d: any) => taskIdMap.get(d) || d);
   }
 
   // Remap critical path
-  const normalizedCriticalPath = (breakdown.criticalPath || []).map(
-    (id) => taskIdMap.get(id) || id
+  const normalizedCriticalPath = (breakdown.criticalPath || []).map((id: any) => taskIdMap.get(id) || id
   );
 
   return {

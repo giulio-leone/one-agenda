@@ -81,13 +81,13 @@ export function createCheckFeasibilityTool(logger?: Logger) {
       const issues: string[] = [];
 
       // Check utilization
-      const overloadedDays = days.filter((d) => d.utilizationPercent > 100);
+      const overloadedDays = days.filter((d: any) => d.utilizationPercent > 100);
       if (overloadedDays.length > 0) {
         issues.push(`${overloadedDays.length} giorni sovraccarichi (>100%)`);
       }
 
       // Check work minutes
-      const exceedingDays = days.filter((d) => d.totalWorkMinutes > maxWorkMinutesPerDay);
+      const exceedingDays = days.filter((d: any) => d.totalWorkMinutes > maxWorkMinutesPerDay);
       if (exceedingDays.length > 0) {
         issues.push(`${exceedingDays.length} giorni eccedono il limite di lavoro`);
       }
@@ -138,20 +138,20 @@ export function createCheckBalanceTool(logger?: Logger) {
 
       // Check average utilization
       const avgUtilization =
-        days.length > 0 ? days.reduce((sum, d) => sum + d.utilizationPercent, 0) / days.length : 0;
+        days.length > 0 ? days.reduce((sum: any, d: any) => sum + d.utilizationPercent, 0) / days.length : 0;
 
       if (avgUtilization > 85) {
         issues.push(`Utilizzo medio alto (${Math.round(avgUtilization)}%) - rischio burnout`);
       }
 
       // Check for breaks
-      const daysWithBreaks = days.filter((d) => d.blocks.some((b) => b.type === 'BREAK'));
+      const daysWithBreaks = days.filter((d: any) => d.blocks.some((b: any) => b.type === 'BREAK'));
       if (daysWithBreaks.length < days.length * 0.8) {
         issues.push('Pause non sufficienti nella programmazione');
       }
 
       // Check weekend work
-      const weekendDays = days.filter((d) => {
+      const weekendDays = days.filter((d: any) => {
         const date = new Date(d.date);
         return !workingSet.has(date.getDay());
       });
@@ -207,8 +207,8 @@ export function createCheckDeadlinesTool(logger?: Logger) {
 
       // Collect all scheduled task IDs with their dates
       const taskScheduleMap: Record<string, string> = {};
-      schedule.days.forEach((day) => {
-        day.blocks.forEach((block) => {
+      schedule.days.forEach((day: any) => {
+        day.blocks.forEach((block: any) => {
           if (block.type === 'TASK' && block.sourceId) {
             scheduledTaskIds.add(block.sourceId);
             taskScheduleMap[block.sourceId] = day.date;
@@ -217,7 +217,7 @@ export function createCheckDeadlinesTool(logger?: Logger) {
       });
 
       // Check deadlines
-      tasks.forEach((task) => {
+      tasks.forEach((task: any) => {
         if (!task.suggestedDeadline) return;
 
         const scheduledDate = taskScheduleMap[task.id];
@@ -292,9 +292,9 @@ export function createCheckGoalCoverageTool(logger?: Logger) {
       const scheduledSet = new Set(scheduledTaskIds);
       const uncoveredGoals: string[] = [];
 
-      goals.forEach((goal) => {
-        const goalTasks = allTasks.filter((t) => t.goalId === goal.id);
-        const scheduledGoalTasks = goalTasks.filter((t) => scheduledSet.has(t.id));
+      goals.forEach((goal: any) => {
+        const goalTasks = allTasks.filter((t: any) => t.goalId === goal.id);
+        const scheduledGoalTasks = goalTasks.filter((t: any) => scheduledSet.has(t.id));
 
         if (goalTasks.length > 0 && scheduledGoalTasks.length === 0) {
           uncoveredGoals.push(goal.title);
@@ -348,8 +348,8 @@ export function createGenerateReportTool(logger?: Logger) {
       }
 
       // Calculate score
-      const criticalFailed = checks.filter((c) => !c.passed && c.severity === 'CRITICAL').length;
-      const warningFailed = checks.filter((c) => !c.passed && c.severity === 'WARNING').length;
+      const criticalFailed = checks.filter((c: any) => !c.passed && c.severity === 'CRITICAL').length;
+      const warningFailed = checks.filter((c: any) => !c.passed && c.severity === 'WARNING').length;
 
       let score = 100;
       score -= criticalFailed * 30;
@@ -359,16 +359,16 @@ export function createGenerateReportTool(logger?: Logger) {
       const isValid = criticalFailed === 0;
 
       // Extract warnings and suggestions
-      const warnings = checks.filter((c) => !c.passed).map((c) => c.message);
+      const warnings = checks.filter((c: any) => !c.passed).map((c: any) => c.message);
       const suggestions = checks
-        .filter((c) => !c.passed && c.remedy)
-        .map((c) => c.remedy as string);
+        .filter((c: any) => !c.passed && c.remedy)
+        .map((c: any) => c.remedy as string);
 
       return JSON.stringify({
         isValid,
         overallScore: score,
         checksTotal: checks.length,
-        checksPassed: checks.filter((c) => c.passed).length,
+        checksPassed: checks.filter((c: any) => c.passed).length,
         criticalFailed,
         warningFailed,
         warnings,
@@ -472,14 +472,14 @@ export class QAReviewAgent {
     // Goals summary
     prompt += `## Goals Summary\n`;
     prompt += `- Total goals: ${goals.length}\n`;
-    goals.forEach((g) => {
+    goals.forEach((g: any) => {
       prompt += `- ${g.title}: ${g.milestones?.length || 0} milestones\n`;
     });
     prompt += `\n`;
 
     // Daily utilization
     prompt += `## Daily Breakdown\n`;
-    days.forEach((d) => {
+    days.forEach((d: any) => {
       prompt += `- ${d.date}: ${d.utilizationPercent}% (${d.blocks?.length || 0} blocks)\n`;
     });
     prompt += `\n`;

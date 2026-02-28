@@ -56,14 +56,14 @@ program
         (item): item is VEvent =>
           typeof item === 'object' && item !== null && (item as VEvent).type === 'VEVENT'
       )
-      .map((event) => {
+      .map((event: any) => {
         const attendeesRaw: ICalAttendee[] = Array.isArray(event.attendee)
           ? (event.attendee as ICalAttendee[])
           : event.attendee
             ? ([event.attendee] as ICalAttendee[])
             : [];
 
-        const attendees = attendeesRaw.map((attendee) =>
+        const attendees = attendeesRaw.map((attendee: any) =>
           typeof attendee === 'string'
             ? { id: attendee, name: attendee }
             : {

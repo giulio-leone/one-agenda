@@ -143,7 +143,7 @@ export function createFetchExistingGoalsTool(input: OneAgendaMeshInput, logger?:
       logger?.info('USER_CONTEXT', 'Fetching existing goals', { userId, statusFilter });
 
       const goals = input.existingGoals || [];
-      const filtered = statusFilter ? goals.filter((g) => statusFilter.includes(g.status)) : goals;
+      const filtered = statusFilter ? goals.filter((g: any) => statusFilter.includes(g.status)) : goals;
 
       return JSON.stringify({
         goals: filtered,
@@ -175,12 +175,12 @@ export function createFetchExistingTasksTool(input: OneAgendaMeshInput, logger?:
       logger?.info('USER_CONTEXT', 'Fetching existing tasks', { userId, includeCompleted });
 
       const tasks = input.existingTasks || [];
-      const filtered = includeCompleted ? tasks : tasks.filter((t) => t.status !== 'COMPLETED');
+      const filtered = includeCompleted ? tasks : tasks.filter((t: any) => t.status !== 'COMPLETED');
 
       return JSON.stringify({
         tasks: filtered,
         count: filtered.length,
-        pendingCount: tasks.filter((t) => t.status === 'TODO' || t.status === 'IN_PROGRESS').length,
+        pendingCount: tasks.filter((t: any) => t.status === 'TODO' || t.status === 'IN_PROGRESS').length,
       });
     },
   });
@@ -202,7 +202,7 @@ export function createFetchCalendarEventsTool(input: OneAgendaMeshInput, logger?
 
       const events = input.calendarEvents || [];
       // Filter events within date range
-      const filtered = events.filter((e) => {
+      const filtered = events.filter((e: any) => {
         const eventStart = new Date(e.startTime);
         return eventStart >= new Date(startDate) && eventStart <= new Date(endDate);
       });
@@ -210,8 +210,8 @@ export function createFetchCalendarEventsTool(input: OneAgendaMeshInput, logger?
       return JSON.stringify({
         events: filtered,
         count: filtered.length,
-        meetingsCount: filtered.filter((e) => e.type === 'MEETING').length,
-        focusBlocksCount: filtered.filter((e) => e.type === 'FOCUS').length,
+        meetingsCount: filtered.filter((e: any) => e.type === 'MEETING').length,
+        focusBlocksCount: filtered.filter((e: any) => e.type === 'FOCUS').length,
       });
     },
   });
@@ -244,7 +244,7 @@ export function createAnalyzeWorkloadTool(logger?: Logger) {
         tasks = [];
       }
 
-      const totalMinutes = tasks.reduce((sum, t) => sum + (t.estimatedMinutes || 30), 0);
+      const totalMinutes = tasks.reduce((sum: any, t: any) => sum + (t.estimatedMinutes || 30), 0);
       const capacityMinutes = availableMinutesPerDay;
 
       let currentLoad: 'LOW' | 'MEDIUM' | 'HIGH' | 'OVERLOADED' = 'LOW';
@@ -259,8 +259,8 @@ export function createAnalyzeWorkloadTool(logger?: Logger) {
       // Find upcoming deadlines
       const now = new Date();
       const upcomingDeadlines = tasks
-        .filter((t) => t.dueDate)
-        .map((t) => {
+        .filter((t: any) => t.dueDate)
+        .map((t: any) => {
           const dueDate = new Date(t.dueDate!);
           const daysRemaining = Math.ceil(
             (dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
@@ -272,7 +272,7 @@ export function createAnalyzeWorkloadTool(logger?: Logger) {
             daysRemaining,
           };
         })
-        .filter((d) => d.daysRemaining >= 0 && d.daysRemaining <= 7)
+        .filter((d: any) => d.daysRemaining >= 0 && d.daysRemaining <= 7)
         .sort((a, b) => a.daysRemaining - b.daysRemaining);
 
       return JSON.stringify({
@@ -311,7 +311,7 @@ export function createAnalyzeProductivityTool(logger?: Logger) {
       }
 
       // Calculate average completion rate
-      const completedTasks = tasks.filter((t) => t.status === 'COMPLETED').length;
+      const completedTasks = tasks.filter((t: any) => t.status === 'COMPLETED').length;
       const totalTasks = tasks.length;
       const averageTaskCompletion = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 50;
 

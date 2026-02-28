@@ -120,7 +120,7 @@ export const GoalFormModal: React.FC<GoalFormModalProps> = ({
   const removeTag = (tag: string) => {
     setFormData({
       ...formData,
-      tags: formData.tags.filter((t) => t !== tag),
+      tags: formData.tags.filter((t: any) => t !== tag),
     });
   };
 
@@ -185,7 +185,7 @@ export const GoalFormModal: React.FC<GoalFormModalProps> = ({
               className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
               disabled={isLoading}
             >
-              {TIME_HORIZONS.map((h) => (
+              {TIME_HORIZONS.map((h: any) => (
                 <option key={h} value={h}>
                   {h.replace(/_/g, ' ')}
                 </option>
@@ -257,7 +257,7 @@ export const GoalFormModal: React.FC<GoalFormModalProps> = ({
             </div>
             {formData.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {formData.tags.map((tag) => (
+                {formData.tags.map((tag: any) => (
                   <span
                     key={tag}
                     className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-sm text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"

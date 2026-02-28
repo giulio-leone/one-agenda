@@ -40,5 +40,5 @@ export function explainBlock(plan: Plan, blockId: string): string[] {
   const decisions = plan.decisions.filter(
     (decision: PlanDecision) => decision.relatedBlockId === blockId
   );
-  return [...block.explanations, ...decisions.map((decision) => decision.rationale)];
+  return [...block.explanations, ...decisions.map((decision: any) => decision.rationale)];
 }

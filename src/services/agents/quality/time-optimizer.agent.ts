@@ -182,7 +182,7 @@ export function createCalculateProductivityScoreTool(logger?: Logger) {
 
       // Check utilization (60-80% is ideal)
       const avgUtilization =
-        days.length > 0 ? days.reduce((sum, d) => sum + d.utilizationPercent, 0) / days.length : 0;
+        days.length > 0 ? days.reduce((sum: any, d: any) => sum + d.utilizationPercent, 0) / days.length : 0;
       if (avgUtilization >= 60 && avgUtilization <= 80) {
         score += 20;
       } else if (avgUtilization >= 50 && avgUtilization <= 90) {
@@ -360,14 +360,14 @@ export class TimeOptimizerAgent {
 
     // Daily breakdown
     prompt += `## Daily Schedule\n`;
-    days.forEach((day) => {
+    days.forEach((day: any) => {
       prompt += `### ${day.date}\n`;
       prompt += `- Blocks: ${day.blocks?.length || 0}\n`;
       prompt += `- Work minutes: ${day.totalWorkMinutes}\n`;
       prompt += `- Utilization: ${day.utilizationPercent}%\n`;
 
       const blocks = day.blocks || [];
-      blocks.forEach((b) => {
+      blocks.forEach((b: any) => {
         const startTime = b.start?.includes('T') ? b.start.split('T')[1]?.substring(0, 5) : b.start;
         const endTime = b.end?.includes('T') ? b.end.split('T')[1]?.substring(0, 5) : b.end;
         prompt += `  - ${startTime}-${endTime}: [${b.type}] ${b.title}\n`;

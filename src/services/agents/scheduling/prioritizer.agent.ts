@@ -248,8 +248,8 @@ export function createIdentifyBlockedTool(logger?: Logger) {
         unblockEstimate?: string;
       }> = [];
 
-      tasks.forEach((task) => {
-        const pendingDeps = task.dependencies.filter((d) => !completedSet.has(d));
+      tasks.forEach((task: any) => {
+        const pendingDeps = task.dependencies.filter((d: any) => !completedSet.has(d));
         if (pendingDeps.length > 0) {
           blocked.push({
             taskId: task.id,
@@ -303,15 +303,15 @@ export function createSuggestDeferralsTool(logger?: Logger) {
 
       // Find tasks that depend on each task
       const dependentsMap: Record<string, string[]> = {};
-      tasks.forEach((t) => {
-        t.dependencies.forEach((dep) => {
+      tasks.forEach((t: any) => {
+        t.dependencies.forEach((dep: any) => {
           if (!dependentsMap[dep]) dependentsMap[dep] = [];
           dependentsMap[dep]!.push(t.id);
         });
       });
 
       const deferrable = tasks
-        .filter((t) => {
+        .filter((t: any) => {
           // Must be LOW or MEDIUM priority
           if (t.priority === 'CRITICAL' || t.priority === 'HIGH') return false;
 
@@ -330,7 +330,7 @@ export function createSuggestDeferralsTool(logger?: Logger) {
 
           return true;
         })
-        .map((t) => t.id);
+        .map((t: any) => t.id);
 
       return JSON.stringify({
         deferrable,
@@ -362,7 +362,7 @@ export function createRankTasksTool(logger?: Logger) {
       }
 
       const ranked = [...results].sort((a, b) => b.priorityScore - a.priorityScore);
-      const topPriorities = ranked.slice(0, 5).map((r) => r.taskId);
+      const topPriorities = ranked.slice(0, 5).map((r: any) => r.taskId);
 
       return JSON.stringify({
         ranked,

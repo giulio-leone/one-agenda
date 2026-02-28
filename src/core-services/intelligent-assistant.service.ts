@@ -198,14 +198,14 @@ export class IntelligentAssistantService {
         date: input.periodEnd, // Use end date as reference
         tasks: this.mapTasksToAgentInput(input.tasks),
         events: [],
-        goals: input.goals.map((g) => ({
+        goals: input.goals.map((g: any) => ({
           id: g.id,
           title: g.title,
           status: g.status,
           deadline: g.targetDate,
           priority: 'MEDIUM',
         })),
-        milestones: input.milestones.map((m) => ({
+        milestones: input.milestones.map((m: any) => ({
           id: m.id,
           goalId: m.goalId,
           title: m.title,
@@ -224,19 +224,19 @@ export class IntelligentAssistantService {
           goalsOnTrack: output.metrics?.goalsOnTrack ?? 0,
           productivityScore: output.metrics?.productivityScore ?? 0,
         },
-        achievements: (output.achievements ?? []).map((a) => ({
+        achievements: (output.achievements ?? []).map((a: any) => ({
           title: a.title,
           completedAt: a.completedAt,
           impact: a.impact,
         })),
         insights: {
           strengths:
-            output.insights?.filter((i) => i.category === 'STRENGTH').map((i) => i.insight) ?? [],
+            output.insights?.filter((i: any) => i.category === 'STRENGTH').map((i: any) => i.insight) ?? [],
           improvements:
-            output.insights?.filter((i) => i.category === 'IMPROVEMENT').map((i) => i.insight) ??
+            output.insights?.filter((i: any) => i.category === 'IMPROVEMENT').map((i: any) => i.insight) ??
             [],
           patterns:
-            output.insights?.filter((i) => i.category === 'PATTERN').map((i) => i.insight) ?? [],
+            output.insights?.filter((i: any) => i.category === 'PATTERN').map((i: any) => i.insight) ?? [],
         },
         recommendations: (output.recommendations ?? []).map((msg, idx) => ({
           message: msg,
@@ -360,8 +360,8 @@ export class IntelligentAssistantService {
       return {
         patterns:
           output.insights
-            ?.filter((i) => i.category === 'PATTERN')
-            .map((i) => ({ type: 'PATTERN', description: i.insight })) ?? [],
+            ?.filter((i: any) => i.category === 'PATTERN')
+            .map((i: any) => ({ type: 'PATTERN', description: i.insight })) ?? [],
         recommendations: (output.recommendations ?? []).map((msg, idx) => ({
           message: msg,
           priority: idx + 1,
@@ -402,7 +402,7 @@ export class IntelligentAssistantService {
   }
 
   private mapTasksToAgentInput(tasks: Task[]): AgendaPlannerInput['tasks'] {
-    return tasks.map((t) => ({
+    return tasks.map((t: any) => ({
       id: t.id,
       title: t.title,
       description: t.description,
@@ -427,7 +427,7 @@ export class IntelligentAssistantService {
   }
 
   private mapEventsToAgentInput(events: CalendarEvent[]): AgendaPlannerInput['events'] {
-    return events.map((e) => ({
+    return events.map((e: any) => ({
       id: e.id,
       title: e.title,
       startTime: e.startTime,
@@ -443,7 +443,7 @@ export class IntelligentAssistantService {
     return {
       userId: prefs.userId,
       timezone: prefs.timezone,
-      workingHours: prefs.workingHours.map((wh) => ({
+      workingHours: prefs.workingHours.map((wh: any) => ({
         dayOfWeek: wh.dayOfWeek,
         startTime: wh.startTime,
         endTime: wh.endTime,
@@ -467,7 +467,7 @@ export class IntelligentAssistantService {
     return {
       schedule: {
         date: (output.plan?.date || new Date().toISOString().split('T')[0]) as string,
-        blocks: (output.plan?.blocks || []).map((b) => ({
+        blocks: (output.plan?.blocks || []).map((b: any) => ({
           id: b.id,
           type: b.type as 'TASK' | 'EVENT' | 'BREAK' | 'BUFFER',
           title: b.title,
@@ -476,8 +476,7 @@ export class IntelligentAssistantService {
         })),
       },
       scheduledTasks: output.scheduledTasks,
-      unscheduledTasks: originalTasks.filter(
-        (t) => !output.scheduledTasks.find((st) => st.taskId === t.id)
+      unscheduledTasks: originalTasks.filter((t: any) => !output.scheduledTasks.find((st: any) => st.taskId === t.id)
       ),
       recommendations: output.recommendations,
     };

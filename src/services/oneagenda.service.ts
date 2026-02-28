@@ -161,7 +161,7 @@ export class OneAgendaService {
           // Find schedule data
           const scheduleBlock = schedule?.days
             ?.flatMap((d) => d.blocks || [])
-            .find((b) => b.sourceId === task.id && b.type === 'TASK');
+            .find((b: any) => b.sourceId === task.id && b.type === 'TASK');
 
           const scheduledStart = scheduleBlock?.start ? new Date(scheduleBlock.start) : undefined;
           const scheduledEnd = scheduleBlock?.end ? new Date(scheduleBlock.end) : undefined;

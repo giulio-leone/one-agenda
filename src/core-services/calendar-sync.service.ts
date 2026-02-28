@@ -487,7 +487,7 @@ export class CalendarSyncService {
       type: EventType.MEETING,
       source: EventSource.GOOGLE,
       externalId: googleEvent.id,
-      attendees: (googleEvent.attendees || []).map((attendee) => ({
+      attendees: (googleEvent.attendees || []).map((attendee: any) => ({
         email: attendee.email,
         name: attendee.displayName,
         responseStatus: mapResponseStatus(attendee.responseStatus),
@@ -530,7 +530,7 @@ export class CalendarSyncService {
       type: EventType.MEETING,
       source: EventSource.MICROSOFT,
       externalId: msEvent.id,
-      attendees: (msEvent.attendees || []).map((attendee) => ({
+      attendees: (msEvent.attendees || []).map((attendee: any) => ({
         email: attendee.emailAddress.address,
         name: attendee.emailAddress.name,
         responseStatus: mapResponseStatus(attendee.status?.response),

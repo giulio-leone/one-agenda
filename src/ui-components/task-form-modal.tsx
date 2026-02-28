@@ -193,18 +193,17 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
   const removeDependency = (taskId: string) => {
     setFormData({
       ...formData,
-      dependencies: formData.dependencies?.filter((id) => id !== taskId) || [],
+      dependencies: formData.dependencies?.filter((id: any) => id !== taskId) || [],
     });
   };
 
   // Filter available tasks: exclude current task (if editing), exclude already linked
-  const filteredAvailableTasks = availableTasks.filter(
-    (t) => t.id !== initialData?.id && !formData.dependencies?.includes(t.id)
+  const filteredAvailableTasks = availableTasks.filter((t: any) => t.id !== initialData?.id && !formData.dependencies?.includes(t.id)
   );
 
   // Resolve dependency details for display
   const resolvedDependencies = (formData.dependencies || [])
-    .map((id) => availableTasks.find((t) => t.id === id))
+    .map((id: any) => availableTasks.find((t: any) => t.id === id))
     .filter(Boolean) as { id: string; title: string; status: string }[];
 
   const isEditMode = !!initialData?.id;
@@ -238,7 +237,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
               <input
                 type="text"
                 value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, title: e.target.value })}
                 className="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                 required
                 disabled={isLoading}
@@ -253,7 +252,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, description: e.target.value })}
                 rows={3}
                 className="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                 disabled={isLoading}
@@ -267,13 +266,13 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                 <label className="text-sm font-medium text-neutral-300">{labels.statusLabel}</label>
                 <select
                   value={formData.status}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                     setFormData({ ...formData, status: e.target.value as TaskFormData['status'] })
                   }
                   className="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                   disabled={isLoading}
                 >
-                  {STATUSES.map((s) => (
+                  {STATUSES.map((s: any) => (
                     <option key={s} value={s}>
                       {s.replace('_', ' ')}
                     </option>
@@ -286,13 +285,13 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                 </label>
                 <select
                   value={formData.priority}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                     setFormData({ ...formData, priority: e.target.value as TaskPriority })
                   }
                   className="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                   disabled={isLoading}
                 >
-                  {PRIORITIES.map((p) => (
+                  {PRIORITIES.map((p: any) => (
                     <option key={p} value={p}>
                       {p}
                     </option>
@@ -310,7 +309,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                 <input
                   type="datetime-local"
                   value={formData.startDate}
-                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, startDate: e.target.value })}
                   className="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                   disabled={isLoading}
                 />
@@ -322,7 +321,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                 <input
                   type="datetime-local"
                   value={formData.deadline}
-                  onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, deadline: e.target.value })}
                   className="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                   disabled={isLoading}
                 />
@@ -338,7 +337,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                   type="number"
                   min="1"
                   value={formData.estimatedMinutes}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setFormData({ ...formData, estimatedMinutes: parseInt(e.target.value) || 30 })
                   }
                   className="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2 text-white focus:border-blue-500 focus:outline-none"
@@ -366,13 +365,13 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                 <div className="mb-2 rounded-lg border border-neutral-700 bg-neutral-900 p-2">
                   <select
                     className="w-full rounded bg-transparent p-1 text-sm text-white focus:outline-none"
-                    onChange={(e) => {
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                       if (e.target.value) addDependency(e.target.value);
                     }}
                     value=""
                   >
                     <option value="">{labels.selectTaskPlaceholder}</option>
-                    {filteredAvailableTasks.map((t) => (
+                    {filteredAvailableTasks.map((t: any) => (
                       <option key={t.id} value={t.id}>
                         {t.title}
                       </option>
@@ -385,7 +384,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                 {resolvedDependencies.length === 0 && (
                   <p className="text-xs text-neutral-500 italic">{labels.noDependencies}</p>
                 )}
-                {resolvedDependencies.map((dep) => (
+                {resolvedDependencies.map((dep: any) => (
                   <div
                     key={dep.id}
                     className="flex items-center justify-between rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2"
@@ -424,7 +423,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
                 <input
                   type="text"
                   value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTagInput(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -446,7 +445,7 @@ export const TaskFormModal: React.FC<TaskFormModalProps> = ({
               </div>
               {formData.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {formData.tags.map((tag) => (
+                  {formData.tags.map((tag: any) => (
                     <span
                       key={tag}
                       className="inline-flex items-center gap-1 rounded-full bg-blue-900/30 px-2 py-1 text-sm text-blue-300"

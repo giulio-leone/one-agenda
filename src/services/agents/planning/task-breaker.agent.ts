@@ -171,7 +171,7 @@ export function createIdentifyDependenciesTool(logger?: Logger) {
 
       // Build dependency graph
       const dependencyGraph: Record<string, string[]> = {};
-      tasks.forEach((t) => {
+      tasks.forEach((t: any) => {
         dependencyGraph[t.id] = t.dependencies || [];
       });
 
@@ -216,7 +216,7 @@ export function createCalculateCriticalPathTool(logger?: Logger) {
       }
 
       // Simple critical path: longest chain of dependencies
-      const taskMap = new Map(tasks.map((t) => [t.id, t]));
+      const taskMap = new Map(tasks.map((t: any) => [t.id, t]));
 
       const getPathLength = (taskId: string, visited: Set<string> = new Set()): number => {
         if (visited.has(taskId)) return 0; // Avoid cycles
@@ -228,14 +228,14 @@ export function createCalculateCriticalPathTool(logger?: Logger) {
         const deps = dependencyGraph[taskId] || [];
         if (deps.length === 0) return task.estimatedMinutes;
 
-        const maxDepPath = Math.max(...deps.map((d) => getPathLength(d, new Set(visited))));
+        const maxDepPath = Math.max(...deps.map((d: any) => getPathLength(d, new Set(visited))));
         return task.estimatedMinutes + maxDepPath;
       };
 
       // Find task with longest path
       let maxLength = 0;
       let criticalStart = '';
-      tasks.forEach((t) => {
+      tasks.forEach((t: any) => {
         const length = getPathLength(t.id);
         if (length > maxLength) {
           maxLength = length;
@@ -254,7 +254,7 @@ export function createCalculateCriticalPathTool(logger?: Logger) {
         // Follow longest dependency
         let maxDepLength = 0;
         let nextTask = '';
-        deps.forEach((d) => {
+        deps.forEach((d: any) => {
           const length = getPathLength(d, new Set());
           if (length > maxDepLength) {
             maxDepLength = length;
@@ -511,14 +511,14 @@ export class TaskBreakerAgent {
     prompt += `Break down the following goals into actionable tasks.\n`;
     prompt += `IMPORTANT: Use the EXACT goalId provided and set milestoneIndex to the milestone number (1, 2, 3...) within that goal.\n\n`;
 
-    goalPlan.goals.forEach((goal) => {
+    goalPlan.goals.forEach((goal: any) => {
       prompt += `## Goal: ${goal.title}\n`;
       prompt += `- **goalId**: \`${goal.id}\`\n`;
       prompt += `- Time Horizon: ${goal.timeHorizon}\n`;
       prompt += `- Target Date: ${goal.targetDate}\n`;
       prompt += `- Number of Milestones: ${goal.milestones.length}\n\n`;
 
-      goal.milestones.forEach((m, idx) => {
+      goal.milestones.forEach((m: any, idx: any) => {
         prompt += `### Milestone ${idx + 1}: ${m.name}\n`;
         prompt += `- **milestoneIndex**: ${idx + 1}\n`;
         prompt += `- **goalId**: \`${goal.id}\`\n`;
@@ -586,7 +586,7 @@ export class TaskBreakerAgent {
 
     return {
       breakdown: {
-        tasks: tasks.map((task) => ({
+        tasks: tasks.map((task: any) => ({
           ...task,
           milestoneId: task?.milestoneId || '', // Placeholder, resolved by normalizeTaskBreakdownIds
         })),

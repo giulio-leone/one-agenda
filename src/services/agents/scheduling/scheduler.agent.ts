@@ -106,12 +106,12 @@ export function createFindAvailableSlotsTool(userContext: UserContext, logger?: 
           end: `${date}T${workEnd}:00`,
           durationMinutes: 300,
         },
-      ].filter((s) => s.durationMinutes >= minimumMinutes);
+      ].filter((s: any) => s.durationMinutes >= minimumMinutes);
 
       return JSON.stringify({
         date,
         slots,
-        totalAvailableMinutes: slots.reduce((sum, s) => sum + s.durationMinutes, 0),
+        totalAvailableMinutes: slots.reduce((sum: any, s: any) => sum + s.durationMinutes, 0),
         workStart,
         workEnd,
         totalWorkMinutes,
@@ -290,8 +290,8 @@ export function createCheckConflictsTool(logger?: Logger) {
       }
 
       // Check capacity
-      const taskBlocks = blocks.filter((b) => b.type === 'TASK');
-      const totalTaskMinutes = taskBlocks.reduce((sum, b) => {
+      const taskBlocks = blocks.filter((b: any) => b.type === 'TASK');
+      const totalTaskMinutes = taskBlocks.reduce((sum: any, b: any) => {
         const start = new Date(b.start);
         const end = new Date(b.end);
         return sum + (end.getTime() - start.getTime()) / 60000;
@@ -299,7 +299,7 @@ export function createCheckConflictsTool(logger?: Logger) {
 
       if (totalTaskMinutes > maxWorkMinutes) {
         conflicts.push({
-          blockIds: taskBlocks.map((b) => b.id),
+          blockIds: taskBlocks.map((b: any) => b.id),
           type: 'CAPACITY',
           description: `${Math.round(totalTaskMinutes)} minuti schedulati superano il limite di ${maxWorkMinutes}`,
         });
@@ -380,8 +380,8 @@ export function createDayScheduleTool(logger?: Logger) {
       }
 
       // Calculate totals
-      const taskBlocks = blocks.filter((b) => b.type === 'TASK');
-      const totalWorkMinutes = taskBlocks.reduce((sum, b) => {
+      const taskBlocks = blocks.filter((b: any) => b.type === 'TASK');
+      const totalWorkMinutes = taskBlocks.reduce((sum: any, b: any) => {
         const start = new Date(b.start);
         const end = new Date(b.end);
         return sum + (end.getTime() - start.getTime()) / 60000;
@@ -611,7 +611,7 @@ export class SchedulerAgent {
     const hasTasksScheduled = days.some((d) => (d?.blocks ?? []).some((b) => b?.type === 'TASK'));
     const avgUtilization =
       days.length > 0
-        ? days.reduce((sum, d) => sum + (d?.utilizationPercent ?? 0), 0) / days.length
+        ? days.reduce((sum: any, d: any) => sum + (d?.utilizationPercent ?? 0), 0) / days.length
         : 0;
 
     const issues: string[] = [];

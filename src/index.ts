@@ -21,6 +21,11 @@ export * from './core-domain';
 export * from './core-services';
 export * from './core-db';
 
+// Explicit re-exports to resolve ambiguity from duplicate export * statements
+export { TaskSchema } from './domain/types';
+export type { Task } from './domain/types';
+export type { CalendarProvider } from './connectors/interfaces';
+
 // UI components (merged from @giulio-leone/oneagenda-ui)
 export * from './ui-components';
 export * from './ui-hooks';

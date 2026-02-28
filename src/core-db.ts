@@ -216,7 +216,7 @@ export const oneagendaDB = {
             assignedToUserId: task.assignedToUserId ?? undefined,
             assignedByCoachId: task.assignedByCoachId ?? undefined,
             parentId: task.parentId ?? undefined,
-            subtasks: task.other_agenda_tasks?.map((t) => t.id) ?? [],
+            subtasks: task.other_agenda_tasks?.map((t: any) => t.id) ?? [],
             createdAt: task.createdAt.toISOString(),
             updatedAt: task.updatedAt.toISOString(),
             createdBy: task.userId ?? actorId,
@@ -524,8 +524,8 @@ export const oneagendaDB = {
       };
 
       // Remove undefined keys
-      (Object.keys(data) as Array<keyof AgendaUserPreferencesUpdate>).forEach((key) => {
-        if (data[key] === undefined) delete data[key];
+      (Object.keys(data) as Array<keyof AgendaUserPreferencesUpdate>).forEach((key: any) => {
+        if ((data as any)[key] === undefined) delete (data as any)[key];
       });
 
       const updated = await prisma.agenda_user_preferences.upsert({

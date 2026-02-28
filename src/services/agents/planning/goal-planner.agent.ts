@@ -540,7 +540,7 @@ export class GoalPlannerAgent {
     // Constraints
     if (intent.constraints.length > 0) {
       prompt += `## Constraints\n`;
-      intent.constraints.forEach((c) => {
+      intent.constraints.forEach((c: any) => {
         prompt += `- ${c}\n`;
       });
       prompt += `\n`;
@@ -592,7 +592,7 @@ export class GoalPlannerAgent {
     const allHaveMetrics = goals.every((g) => (g?.successMetrics?.length ?? 0) > 0);
 
     // Validate and fix missing dueDates on milestones
-    goals.forEach((goal) => {
+    goals.forEach((goal: any) => {
       if (!goal?.milestones) return;
 
       const targetDate = goal.targetDate
@@ -605,7 +605,7 @@ export class GoalPlannerAgent {
       );
       const milestoneCount = goal.milestones.length;
 
-      goal.milestones.forEach((m, idx) => {
+      goal.milestones.forEach((m: any, idx: any) => {
         if (!m.dueDate) {
           // Calculate fallback dueDate by spacing evenly
           const daysPerMilestone = Math.ceil(totalDays / milestoneCount);
