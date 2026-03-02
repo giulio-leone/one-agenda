@@ -5,10 +5,10 @@
  * Provides a typed interface for consumers to generate daily agendas.
  */
 
-import { execute } from '@giulio-leone/one-agent/framework';
+// Legacy SDK 3.1 execute function — no longer used. Agenda generation now uses
+// OneAgendaMeshOrchestrator (Gauss-based) in the /api/oneagenda/generate route.
 import {
   AgendaPlannerInputSchema,
-  AgendaPlannerOutputSchema,
   type AgendaPlannerInput,
   type AgendaPlannerOutput,
 } from '../sdk-agents/agenda-planner/schema';
@@ -58,27 +58,11 @@ export async function generateAgenda(
   // Validate input
   const validatedInput = AgendaPlannerInputSchema.parse(input);
 
-  const result = await execute<AgendaPlannerOutput>('sdk-agents/agenda-planner', validatedInput, {
-    userId: options?.userId ?? input.userId,
-    basePath: __dirname,
-    schemas: {
-      input: AgendaPlannerInputSchema,
-      output: AgendaPlannerOutputSchema,
-    },
-  });
-
-  if (!result.success) {
-    const error = result.error;
-    if (typeof error === 'object' && error !== null && 'message' in error) {
-      throw new AgendaGenerationError(
-        error.message as string,
-        (error as { code?: string }).code ?? 'UNKNOWN_ERROR',
-        (error as { recoverable?: boolean }).recoverable ?? false
-      );
-    }
-    throw new AgendaGenerationError('Agenda generation failed', 'UNKNOWN_ERROR', false);
-  }
-
-  // Safe type assertion since we've verified success
-  return result.output as AgendaPlannerOutput;
+  // Legacy SDK 3.1 execute() removed — use OneAgendaMeshOrchestrator instead.
+  // This function is kept for backward compatibility but should not be called.
+  throw new AgendaGenerationError(
+    'Legacy generateAgenda() is deprecated. Use OneAgendaMeshOrchestrator.orchestrate() instead.',
+    'DEPRECATED',
+    false
+  );
 }

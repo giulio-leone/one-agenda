@@ -39,8 +39,8 @@ import {
   normalizeTaskBreakdownIds,
   createId,
 } from './utils';
-import { OrchestrationResilience } from '@giulio-leone/lib-ai';
-import { GenerationStateService } from '@giulio-leone/lib-ai';
+import { OrchestrationResilience } from '@giulio-leone/ai-config';
+import { GenerationStateService } from '@giulio-leone/ai-config';
 
 // Import agents
 import { IntentParserAgent, parsedIntentSchema } from './foundation/intent-parser.agent';
