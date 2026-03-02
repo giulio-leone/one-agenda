@@ -15,7 +15,9 @@
  * @module oneagenda/agents/orchestrator
  */
 
-import { ToolLoopAgent, Output, stepCountIs, type LanguageModel } from 'ai';
+import { Agent } from 'gauss-ai';
+import { bridgeToolsToGauss } from './compat/ai-tool';
+import { resolveFullProviderConfig, toAgentConfig } from '@giulio-leone/gauss-agents';
 import type {
   Logger,
   Checkpoint,
@@ -61,7 +63,6 @@ import { QAReviewAgent, qaReportSchema } from './quality/qa-review.agent';
 // ============================================================================
 
 export class OneAgendaMeshOrchestrator {
-  private readonly model: LanguageModel;
   private readonly maxSteps: number;
   private readonly logger?: Logger;
   private readonly resilience: OrchestrationResilience;
@@ -77,7 +78,6 @@ export class OneAgendaMeshOrchestrator {
   private readonly qaReviewAgent: QAReviewAgent;
 
   constructor(config: OneAgendaMeshOrchestratorConfig) {
-    this.model = config.model;
     this.maxSteps = config.maxSteps || 100;
     this.logger = config.logger;
     this.resilience = new OrchestrationResilience();
@@ -98,8 +98,8 @@ export class OneAgendaMeshOrchestrator {
   // ============================================================================
 
   /**
-   * Run a single agent with ToolLoopAgent + Output.object pattern.
-   * Uses partialOutputStream for streaming structured output.
+   * Run a single agent using Gauss Agent.runWithTools().
+   * Bridges AI SDK tool format to Gauss ToolDef + executor.
    */
   private async runAgent<T>(
     agentName: string,
@@ -120,87 +120,51 @@ export class OneAgendaMeshOrchestrator {
     eventSender?.sendEvent?.('agent_start', { agent: agentName });
 
     try {
-      const agent = new ToolLoopAgent({
-        model: this.model,
+      // Bridge AI SDK tools to Gauss format
+      const { defs, executor } = bridgeToolsToGauss(
+        tools as Record<string, import('./compat/ai-tool').LocalTool>
+      );
+
+      // Resolve provider config from DB
+      const providerConfig = await resolveFullProviderConfig();
+      const agentConfig = toAgentConfig(providerConfig);
+
+      const agent = new Agent({
+        ...agentConfig,
+        name: agentName,
         instructions: systemPrompt,
-        tools,
-        stopWhen: stepCountIs(this.maxSteps),
-        toolChoice: 'auto',
-        output: Output.object({
-          schema: outputSchema as Parameters<typeof Output.object>[0]['schema'],
-        }),
+        tools: defs,
+        maxSteps: this.maxSteps,
+        outputSchema: outputSchema,
       });
 
-      // Use stream() pattern from AI SDK docs
-      // output is a promise that resolves when agent completes
-      const streamResult = await agent.stream({
-        prompt: userPrompt,
-        abortSignal,
-      });
+      eventSender?.sendProgress?.(30, `${agentName}: processing...`);
 
-      const { partialOutputStream, textStream, output } = streamResult;
+      const agentResult = await agent.runWithTools(userPrompt, executor);
 
-      let lastPartial: Partial<T> | null = null;
-      let stepCount = 0;
-      let textOutput = '';
-
-      // Consume textStream for debugging
-      const textPromise = (async () => {
-        for await (const text of textStream) {
-          textOutput += text;
-        }
-      })();
-
-      // Consume partialOutputStream for progress updates
-      for await (const partial of partialOutputStream) {
-        lastPartial = partial as Partial<T>;
-        stepCount++;
-
-        if (stepCount % 5 === 0) {
-          eventSender?.sendProgress?.(Math.min(stepCount * 3, 80), `${agentName}: processing...`);
-        }
-      }
-
-      await textPromise;
-
-      // Get final output from the output promise (AI SDK pattern)
-      let finalOutput: T | null = null;
-      try {
-        finalOutput = (await output) as T;
-      } catch (outputError) {
-        // output promise may throw if no structured output was generated
-        this.logger?.warn(
-          'ORCHESTRATOR',
-          `${agentName} output promise rejected, using lastPartial`,
-          {
-            hasLastPartial: !!lastPartial,
-            lastPartialKeys: lastPartial ? Object.keys(lastPartial as object) : [],
-            errorMessage: outputError instanceof Error ? outputError.message : String(outputError),
-            errorName: outputError instanceof Error ? outputError.name : 'Unknown',
-          }
-        );
-        finalOutput = lastPartial as T;
-      }
-
-      // Log text output for debugging if no output received
-      if (!finalOutput && textOutput.length > 0) {
-        this.logger?.warn('ORCHESTRATOR', `${agentName} generated text but no structured output`, {
-          textLength: textOutput.length,
-          textPreview: textOutput.substring(0, 500),
-        });
-      }
+      agent.destroy();
 
       const duration = Date.now() - startTime;
+      let finalOutput: T | null = null;
+
+      if (agentResult.structuredOutput) {
+        finalOutput = agentResult.structuredOutput as T;
+      } else if (agentResult.text) {
+        // Try parsing text as JSON if no structured output
+        try {
+          finalOutput = JSON.parse(agentResult.text) as T;
+        } catch {
+          this.logger?.warn('ORCHESTRATOR', `${agentName} text not parseable as JSON`, {
+            textPreview: agentResult.text.substring(0, 200),
+          });
+        }
+      }
 
       this.logger?.info('ORCHESTRATOR', `Completed ${agentName}`, {
         durationMs: duration,
-        partialsReceived: stepCount,
+        steps: agentResult.steps,
         hasResult: !!finalOutput,
-        outputSource: finalOutput
-          ? finalOutput === lastPartial
-            ? 'partial'
-            : 'output_promise'
-          : 'none',
+        tokens: agentResult.inputTokens + agentResult.outputTokens,
       });
 
       eventSender?.sendEvent?.('agent_complete', {
@@ -209,7 +173,7 @@ export class OneAgendaMeshOrchestrator {
         success: !!finalOutput,
       });
 
-      return { result: finalOutput, raw: textOutput };
+      return { result: finalOutput, raw: agentResult.text };
     } catch (error) {
       const duration = Date.now() - startTime;
 

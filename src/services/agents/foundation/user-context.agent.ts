@@ -14,7 +14,7 @@
  * @module oneagenda/agents/foundation/user-context
  */
 
-import { tool } from 'ai';
+import { tool } from '../compat/ai-tool';
 import { z } from 'zod';
 import type {
   Logger,

@@ -7,7 +7,8 @@
  * @module oneagenda/agents/types
  */
 
-import type { LanguageModel } from 'ai';
+/** Local type replacing Vercel AI SDK LanguageModel */
+type LanguageModel = { readonly provider: string; readonly modelId: string; [key: string]: unknown };
 
 // ============================================================================
 // LOGGER
@@ -36,7 +37,7 @@ export interface Checkpoint {
 // ============================================================================
 
 export interface OneAgendaMeshOrchestratorConfig {
-  model: LanguageModel;
+  model?: LanguageModel;
   maxSteps?: number;
   logger?: Logger;
 }

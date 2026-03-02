@@ -9,7 +9,7 @@
  * @module oneagenda/agents/planning/task-breaker
  */
 
-import { tool } from 'ai';
+import { tool } from '../compat/ai-tool';
 import { z } from 'zod';
 import type { Logger, TaskBreakdown, PlannedTask, Checkpoint, GoalPlan } from '../types';
 import { createPassingCheckpoint, createFailingCheckpoint, createId } from '../utils';

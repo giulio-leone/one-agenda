@@ -11,7 +11,7 @@
  * @module oneagenda/agents/foundation/intent-parser
  */
 
-import { tool } from 'ai';
+import { tool } from '../compat/ai-tool';
 import { z } from 'zod';
 import type { Logger, ParsedIntent, Checkpoint } from '../types';
 

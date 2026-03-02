@@ -12,7 +12,7 @@
  * @module oneagenda/agents/quality/qa-review
  */
 
-import { tool } from 'ai';
+import { tool } from '../compat/ai-tool';
 import { z } from 'zod';
 import type { Logger, QAReport, Checkpoint, Schedule, GoalPlan } from '../types';
 import { createPassingCheckpoint, createFailingCheckpoint } from '../utils';

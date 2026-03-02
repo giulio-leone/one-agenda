@@ -12,7 +12,7 @@
  * @module oneagenda/agents/quality/time-optimizer
  */
 
-import { tool } from 'ai';
+import { tool } from '../compat/ai-tool';
 import { z } from 'zod';
 import type { Logger, Schedule, Checkpoint } from '../types';
 import { createPassingCheckpoint, createFailingCheckpoint } from '../utils';
