@@ -135,7 +135,7 @@ export class OneAgendaMeshOrchestrator {
         instructions: systemPrompt,
         tools: defs,
         maxSteps: this.maxSteps,
-        outputSchema: outputSchema,
+        outputSchema: outputSchema as Record<string, unknown> | undefined,
       });
 
       eventSender?.sendProgress?.(30, `${agentName}: processing...`);

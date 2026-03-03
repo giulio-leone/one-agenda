@@ -34,13 +34,16 @@ export function bridgeToolsToGauss(tools: Record<string, LocalTool>) {
   const defs = Object.entries(tools).map(([name, t]) => ({
     name,
     description: t.description,
-    parameters: t.parameters,
+    parameters: (t.parameters as unknown as { _def?: unknown })._def
+      ? JSON.parse(JSON.stringify(t.parameters))
+      : (t.parameters as unknown as Record<string, unknown>),
   }));
 
-  const executor = async (name: string, argsStr: string): Promise<string> => {
-    const fn = tools[name]?.execute;
-    if (!fn) return JSON.stringify({ error: `Unknown tool: ${name}` });
-    const args = JSON.parse(argsStr);
+  const executor = async (callJson: string): Promise<string> => {
+    const call = JSON.parse(callJson) as { name: string; arguments?: string };
+    const fn = tools[call.name]?.execute;
+    if (!fn) return JSON.stringify({ error: `Unknown tool: ${call.name}` });
+    const args = call.arguments ? JSON.parse(call.arguments) : {};
     const result = await fn(args);
     return typeof result === 'string' ? result : JSON.stringify(result);
   };
