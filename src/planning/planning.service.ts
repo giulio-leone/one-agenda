@@ -14,7 +14,8 @@
  * @version 2.0.0 - AI SDK v6 Integration
  */
 
-import { prisma } from '@giulio-leone/lib-core';
+import { getDbClient } from '@giulio-leone/core';
+const prisma = getDbClient() as any;
 import { Prisma } from '@prisma/client';
 import type { $Enums } from '@prisma/client';
 import { logger } from '@giulio-leone/lib-core';

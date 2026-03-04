@@ -28,6 +28,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@giulio-leone/core": "workspace:*",
     "commander": "^14.0.3",
     "date-fns": "^4.1.0",
     "gauss-ai": "^6.0.0",

@@ -7,7 +7,8 @@
 
 // For now, we'll create a stub that matches the interface
 // TODO: Move db.ts to one-agenda package and export it properly
-import { prisma } from '@giulio-leone/lib-core';
+import { getDbClient } from '@giulio-leone/core';
+const prisma = getDbClient() as any;
 import { randomUUID } from 'crypto';
 import { TaskStatus, TaskPriority } from './core-domain/task';
 import { GoalStatus, GoalTimeHorizon } from './core-domain/goal';
