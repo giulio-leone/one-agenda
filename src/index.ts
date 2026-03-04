@@ -13,6 +13,3 @@ export * from './core-domain';
 
 // Database access
 export * from './core-db';
-
-// Planning service (PlanningServiceV2)
-export * from './planning';
