@@ -15,7 +15,7 @@
  */
 
 import { getDbClient } from '@giulio-leone/core';
-const prisma = getDbClient() as any;
+const prisma = getDbClient() as import('@prisma/client').PrismaClient;
 import { Prisma } from '@prisma/client';
 import type { $Enums } from '@prisma/client';
 import { logger } from '@giulio-leone/lib-core';
