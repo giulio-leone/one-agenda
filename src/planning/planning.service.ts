@@ -18,7 +18,7 @@ import { getTypedDbClient } from '@giulio-leone/core';
 const prisma = getTypedDbClient();
 import { Prisma } from '@prisma/client';
 import type { $Enums } from '@prisma/client';
-import { logger } from '@giulio-leone/lib-core';
+import { logger } from '@giulio-leone/lib-core/logger.service';
 import type {
   PlanningPlan,
   PlanningTask,
